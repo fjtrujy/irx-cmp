@@ -54,3 +54,20 @@ jobs:
       run: |
         ${{ matrix.values.prefix }}-readelf --version
 
+    - name: Get short SHA
+      id: slug
+      run: echo "sha8=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_OUTPUT
+    
+    - name: Print content
+      run: |
+        cd $PS2DEV/ps2sdk/iop/irx
+        pwd
+        ls -ll -R .
+
+    - name: Upload artifacts
+      if: ${{ success() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: audsrv-${{ steps.slug.outputs.sha8 }}-${{matrix.values.docker_tag}}
+        path: usr/local/ps2dev/ps2sdk/iop/irx/audsrv.irx
+
