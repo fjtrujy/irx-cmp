@@ -17,19 +17,24 @@ jobs:
     strategy:
       matrix:
         values: [
-          {docker_tag: "v1.0", prefix: "iop", flag: "l"},
-          {docker_tag: "v1.1", prefix: "iop", flag: "l"},
-          {docker_tag: "v1.2.0", prefix: "iop", flag: "l"}, 
-          {docker_tag: "latest", prefix: "mipsel-ps2-irx", flag: "l"}, 
+          {docker_tag: "v1.0", prefix: "iop"},
+          {docker_tag: "v1.1", prefix: "iop"},
+          {docker_tag: "v1.2.0", prefix: "iop"}, 
+          {docker_tag: "latest", prefix: "mipsel-ps2-irx"}, 
         ]
 
     container: ps2dev/ps2dev:${{ matrix.values.docker_tag }}
     steps:
 
-    - name: Check headers
+    - name: Check program sections
       run: |
         cd $PS2DEV/ps2sdk/iop/irx
-        ${{ matrix.values.prefix }}-readelf -${{ matrix.values.flag }} audsrv.irx
+        ${{ matrix.values.prefix }}-readelf -l audsrv.irx
+    
+    - name: Check IOPMOD content
+      run: |
+        cd $PS2DEV/ps2sdk/iop/irx
+        ${{ matrix.values.prefix }}-objdump -s -j .iopmod audsrv.irx
 
     - name: Binutils version
       run: |
