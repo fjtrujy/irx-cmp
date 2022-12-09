@@ -24,7 +24,8 @@ jobs:
         ]
 
     container: ps2dev/ps2dev:${{ matrix.values.docker_tag }}
-    
+    steps:
+
     - name: Check headers
       run: |
         cd $PS2DEV/ps2sdk/iop/irx
