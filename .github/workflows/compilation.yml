@@ -17,8 +17,6 @@ jobs:
     strategy:
       matrix:
         values: [
-          {docker_tag: "v1.0", prefix: "iop"},
-          {docker_tag: "v1.1", prefix: "iop"},
           {docker_tag: "v1.2.0", prefix: "iop"}, 
           {docker_tag: "latest", prefix: "mipsel-ps2-irx"}, 
         ]
@@ -26,16 +24,20 @@ jobs:
     container: ps2dev/ps2dev:${{ matrix.values.docker_tag }}
     steps:
 
-    - name: Check program sections
+    - name: Check executable audsrv.irx
       run: |
         cd $PS2DEV/ps2sdk/iop/irx
         ${{ matrix.values.prefix }}-readelf -l audsrv.irx
+        ${{ matrix.values.prefix }}-objdump -h audsrv.irx
+        ${{ matrix.values.prefix }}-objdump -s -j .iopmod audsrv.irx
     
-    - name: Check IOPMOD content
+    - name: Check executable poweroff.irx
       run: |
         cd $PS2DEV/ps2sdk/iop/irx
-        ${{ matrix.values.prefix }}-objdump -s -j .iopmod audsrv.irx
-
+        ${{ matrix.values.prefix }}-readelf -l poweroff.irx
+        ${{ matrix.values.prefix }}-objdump -h poweroff.irx
+        ${{ matrix.values.prefix }}-objdump -s -j .iopmod poweroff.irx
+        
     - name: Binutils version
       run: |
         ${{ matrix.values.prefix }}-readelf --version
