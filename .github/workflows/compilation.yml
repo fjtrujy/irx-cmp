@@ -45,8 +45,7 @@ jobs:
     
     - name: Compile & Check dummy.irx
       run: |
-        ${{ matrix.values.prefix }}-gcc -D_IOP -fno-builtin -G0 -Os -Wall -Werror -g -msoft-float -c main.c -o main.o
-        ${{ matrix.values.prefix }}-gcc -D_IOP -fno-builtin -G0 -Os -Wall -Werror -g -msoft-float -o dummy.irx main.o -nostdlib
+        make
         ${{ matrix.values.prefix }}-readelf -l dummy.irx
         ${{ matrix.values.prefix }}-objdump -h dummy.irx
         ${{ matrix.values.prefix }}-objdump -s -j .iopmod dummy.irx
