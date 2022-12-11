@@ -23,6 +23,11 @@ jobs:
 
     container: ps2dev/ps2dev:${{ matrix.values.docker_tag }}
     steps:
+    - uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        apk add build-base
 
     - name: Check executable audsrv.irx
       run: |
@@ -37,6 +42,14 @@ jobs:
         ${{ matrix.values.prefix }}-readelf -l poweroff.irx
         ${{ matrix.values.prefix }}-objdump -h poweroff.irx
         ${{ matrix.values.prefix }}-objdump -s -j .iopmod poweroff.irx
+    
+    - name: Compile & Check dummy.irx
+      run: |
+        ${{ matrix.values.prefix }}-gcc -D_IOP -fno-builtin -G0 -Os -Wall -Werror -g -msoft-float -c main.c -o main.o
+        ${{ matrix.values.prefix }}-gcc -D_IOP -fno-builtin -G0 -Os -Wall -Werror -g -msoft-float -o dummy.irx main.o -nostdlib
+        ${{ matrix.values.prefix }}-readelf -l dummy.irx
+        ${{ matrix.values.prefix }}-objdump -h dummy.irx
+        ${{ matrix.values.prefix }}-objdump -s -j .iopmod dummy.irx
         
     - name: Binutils version
       run: |
