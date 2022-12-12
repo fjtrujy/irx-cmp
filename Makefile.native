@@ -6,7 +6,7 @@
 # Licenced under Academic Free License version 2.0
 # Review ps2sdk README & LICENSE files for further details.
 
-IOP_BIN = dummy.irx
+IOP_BIN = dummy.elf
 
 IOP_OBJS = main.o
 
@@ -23,5 +23,5 @@ clean:
 	rm -rf $(IOP_OBJS) $(IOP_BIN)
 
 # Include makefiles
-include $(PS2SDK)/samples/Makefile.pref
-include $(PS2SDK)/samples/Makefile.iopglobal
+include Makefile.pref_native
+include Makefile.iopglobal_native
